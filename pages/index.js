@@ -1,53 +1,52 @@
-import useSWR from "swr"
+import useSWRInfinite from "swr/infinite"
 import Head from "next/head"
 import Image from "next/image"
 import styles from "../styles/Home.module.css"
 
 export default function Home() {
-	// const fetchData = async (path, token) => {
-	// 	try {
-	// 		const response = await fetch(path, {
-	// 			headers: {
-	// 				Authorization: `Bearer ${token}`,
-	// 				"User-Agent":
-	// 					"Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:96.0) Gecko/20100101 Firefox/96.0",
-	// 			},
-	// 		})
-	// 		const data = await response.json()
-	// 		console.log(data)
-	// 		return data
-	// 	} catch (error) {
-	// 		console.log(error)
-	// 		return await error
-	// 	}
-	// }
+	const fetchSavedPosts = async () => {
+		const bodyData = { currentPostFullname: "t3_rtuh19" }
+		try {
+			const response = await fetch(
+				"http://localhost:3000/api/saved-posts-dev",
+				{
+					method: "POST",
+					headers: {
+						"Content-Type": "application/json",
+					},
+					body: JSON.stringify(bodyData),
+				}
+			)
+			const data = await response.json()
+			return data
+		} catch (error) {
+			console.log(error)
+			return error
+		}
+	}
 
-	// const { data, error } = useSWR(
-	// 	`https://abdev-cors-anywhere.herokuapp.com/https://oauth.reddit.com/user/${process.env.NEXT_PUBLIC_REDDIT_USER}/saved`,
-	// 	fetchData(
-	// 		`https://abdev-cors-anywhere.herokuapp.com/https://oauth.reddit.com/user/${process.env.NEXT_PUBLIC_REDDIT_USER}/saved`,
-	// 		process.env.NEXT_PUBLIC_REDDIT_OAUTH_TOKEN
-	// 	)
-	// )
-	// const fetchData = (url) =>
-	// 	fetch(url, {
-	// 		headers: {
-	// 			Authorization: `Bearer ${process.env.NEXT_PUBLIC_REDDIT_OAUTH_TOKEN}`,
-	// 			"User-Agent":
-	// 				"Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:96.0) Gecko/20100101 Firefox/96.0",
-	// 		},
-	// 	})
-	// 		.then((response) => response.json())
-	// 		.then((response) => console.log(response))
+	const getKey = () => {
+		return `/api/saved-posts-dev/1`
+	}
+	const { data, error, size, setSize } = useSWRInfinite(getKey, fetchSavedPosts)
 
-	// const { data, error } = useSWR(
-	// 	`https://abdev-cors-anywhere.herokuapp.com/https://oauth.reddit.com/user/${process.env.NEXT_PUBLIC_REDDIT_USER}/saved`,
-	// 	fetchData
-	// )
-	// if (error) return <p>{error}</p>
-	// if (!data) return <p>Loading...</p>
+	const handleFetchMore = () => setSize(size + 1)
+	if (error)
+		return (
+			<p>
+				Wow, you have terrible taste. We can&lsquo;t work with this!
+				<p>
+					Just kidding--there was a problem. That&lsquo;s our bad. Your saved
+					posts are probably amazing.
+				</p>
+			</p>
+		)
+	if (!data) return <p>Loading...</p>
 
-	{
+	if (data) {
+		console.log(data[0].data)
+		console.log(data)
+		// data[0].map((item) => console.log(item))
 		return (
 			<div className={styles.container}>
 				<Head>
@@ -57,9 +56,12 @@ export default function Home() {
 				</Head>
 				<h1>Hello!</h1>
 				{/* {data &&
-					data.children.map((item) => (
+					data.data.map((item) => (
 						<article key={item.name}>{item.subreddit}</article>
 					))} */}
+				<button className="fetch-more" onClick={handleFetchMore}>
+					Fetch More
+				</button>
 			</div>
 		)
 	}
