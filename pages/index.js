@@ -1,7 +1,9 @@
 import useSWRInfinite from "swr/infinite"
 import Head from "next/head"
 import Image from "next/image"
-import styles from "../styles/Home.module.css"
+import styles from "../styles/home.module.css"
+
+import PostCard from "../components/feed/PostCard"
 
 export default function Home() {
 	const fetchSavedPosts = async () => {
@@ -17,8 +19,13 @@ export default function Home() {
 					body: JSON.stringify(bodyData),
 				}
 			)
-			const data = await response.json()
-			return data
+			const rawData = await response.json()
+			const indexedData = await rawData.data.map((post, postIndex) => ({
+				...post,
+				initialIndex: postIndex,
+			}))
+
+			return indexedData
 		} catch (error) {
 			console.log(error)
 			return error
@@ -41,12 +48,32 @@ export default function Home() {
 				</p>
 			</p>
 		)
+
+	function shuffle(array) {
+		let currentIndex = array.length,
+			randomIndex
+
+		// While there remain elements to shuffle...
+		while (currentIndex != 0) {
+			// Pick a remaining element...
+			randomIndex = Math.floor(Math.random() * currentIndex)
+			currentIndex--
+
+			// And swap it with the current element.
+			;[array[currentIndex], array[randomIndex]] = [
+				array[randomIndex],
+				array[currentIndex],
+			]
+		}
+
+		return array
+	}
 	if (!data) return <p>Loading...</p>
 
-	if (data) {
-		console.log(data[0].data)
-		console.log(data)
-		// data[0].map((item) => console.log(item))
+	if (data && typeof data !== undefined) {
+		console.log(data.flat(3))
+		// console.log(data.forEach((set) => console.log(set.data)))
+		// data[0].data.map((item) => console.log(item.preview.enabled))
 		return (
 			<div className={styles.container}>
 				<Head>
@@ -55,10 +82,12 @@ export default function Home() {
 					<link rel="icon" href="/favicon.ico" />
 				</Head>
 				<h1>Hello!</h1>
-				{/* {data &&
-					data.data.map((item) => (
-						<article key={item.name}>{item.subreddit}</article>
-					))} */}
+
+				{data[0] &&
+					shuffle(data.flat(3)).map((item) => (
+						<PostCard key={item.name} item={item} />
+					))}
+
 				<button className="fetch-more" onClick={handleFetchMore}>
 					Fetch More
 				</button>
