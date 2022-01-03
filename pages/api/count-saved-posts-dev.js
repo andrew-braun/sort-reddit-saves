@@ -6,9 +6,7 @@ export default async function handler(req, res) {
 	// const username = req.body.username
 	// const password = req.body.password
 
-	const currentPostFullname = (await req.body.currentPostFullname)
-		? req.body.currentPostFullname
-		: ""
+	const currentPostFullname = await req.body.currentPostFullname
 
 	const config = {
 		userAgent: "Shuffle Saved Posts by thewhiskeyrepublic",
@@ -22,9 +20,8 @@ export default async function handler(req, res) {
 		const r = new snoowrap(config)
 
 		const savedContent = await r.getMe().getSavedContent({
-			after: currentPostFullname,
-			limit: 150,
-			skipReplies: true,
+			count: 25,
+			limit: 2,
 		})
 		// const moreContent = await savedContent.fetchMore({ amount: 25 })
 
