@@ -1,17 +1,42 @@
-import useSWRInfinite from "swr/infinite"
+import useSWR from "swr"
 import Head from "next/head"
 import Image from "next/image"
 import styles from "../styles/home.module.css"
 
+import PostFeed from "../components/feed/PostFeed"
 import PostCard from "../components/feed/PostCard"
 
-export default function Home({ data }) {
-	// const getKey = () => {
-	// 	return `/api/saved-posts-dev/1`
-	// }
-	// const { data, error, size, setSize } = useSWRInfinite(getKey, fetchSavedPosts)
+export default function Home() {
+	const fetchData = async () => {
+		const bodyData = { currentPostFullname: "t3_rtuh19" }
+		try {
+			const response = await fetch(
+				"http://localhost:3000/api/saved-posts-dev",
+				{
+					method: "POST",
+					headers: {
+						"Content-Type": "application/json",
+					},
+					body: JSON.stringify(bodyData),
+				}
+			)
+			const rawData = await response.json()
+			const indexedData = await rawData.data.map((post, postIndex) => ({
+				...post,
+				initialIndex: postIndex,
+			}))
 
-	// const handleFetchMore = () => setSize(size + 1)
+			const data = indexedData.flat(3)
+
+			return data
+		} catch (error) {
+			console.log(error)
+			return error
+		}
+	}
+
+	const { data, error } = useSWR("/api/saved-posts-dev", fetchData)
+
 	// if (error)
 	// 	return (
 	// 		<p>
@@ -23,25 +48,6 @@ export default function Home({ data }) {
 	// 		</p>
 	// 	)
 
-	function shuffle(array) {
-		let currentIndex = array.length,
-			randomIndex
-
-		// While there remain elements to shuffle...
-		while (currentIndex != 0) {
-			// Pick a remaining element...
-			randomIndex = Math.floor(Math.random() * currentIndex)
-			currentIndex--
-
-			// And swap it with the current element.
-			;[array[currentIndex], array[randomIndex]] = [
-				array[randomIndex],
-				array[currentIndex],
-			]
-		}
-
-		return array
-	}
 	if (!data) return <p>Loading...</p>
 
 	if (data && typeof data !== undefined) {
@@ -57,39 +63,34 @@ export default function Home({ data }) {
 				</Head>
 				<h1>Hello!</h1>
 
-				{data[0] &&
-					shuffle(data.flat(3)).map((item) => (
-						<PostCard key={item.name} item={item} />
-					))}
-
-				<button className="fetch-more">Fetch More</button>
+				{data[0] && <PostFeed data={data} />}
 			</div>
 		)
 	}
 }
-export async function getServerSideProps() {
-	const bodyData = { currentPostFullname: "t3_rtuh19" }
-	try {
-		const response = await fetch("http://localhost:3000/api/saved-posts-dev", {
-			method: "POST",
-			headers: {
-				"Content-Type": "application/json",
-			},
-			body: JSON.stringify(bodyData),
-		})
-		const rawData = await response.json()
-		const indexedData = await rawData.data.map((post, postIndex) => ({
-			...post,
-			initialIndex: postIndex,
-		}))
+// export async function getServerSideProps() {
+// 	const bodyData = { currentPostFullname: "t3_rtuh19" }
+// 	try {
+// 		const response = await fetch("http://localhost:3000/api/saved-posts-dev", {
+// 			method: "POST",
+// 			headers: {
+// 				"Content-Type": "application/json",
+// 			},
+// 			body: JSON.stringify(bodyData),
+// 		})
+// 		const rawData = await response.json()
+// 		const indexedData = await rawData.data.map((post, postIndex) => ({
+// 			...post,
+// 			initialIndex: postIndex,
+// 		}))
 
-		const data = indexedData
+// 		const data = indexedData.flat(3)
 
-		return { props: { data } }
-	} catch (error) {
-		console.log(error)
-		return error
-	}
+// 		return { props: { data } }
+// 	} catch (error) {
+// 		console.log(error)
+// 		return error
+// 	}
 
-	// Pass data to the page via props
-}
+// 	// Pass data to the page via props
+// }
