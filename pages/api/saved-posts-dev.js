@@ -23,7 +23,7 @@ export default async function handler(req, res) {
 
 		const savedContent = await r.getMe().getSavedContent({
 			after: currentPostFullname,
-			limit: 150,
+			limit: 25,
 			skipReplies: true,
 		})
 		// const moreContent = await savedContent.fetchMore({ amount: 25 })

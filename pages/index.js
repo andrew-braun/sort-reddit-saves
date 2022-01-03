@@ -5,49 +5,23 @@ import styles from "../styles/home.module.css"
 
 import PostCard from "../components/feed/PostCard"
 
-export default function Home() {
-	const fetchSavedPosts = async () => {
-		const bodyData = { currentPostFullname: "t3_rtuh19" }
-		try {
-			const response = await fetch(
-				"http://localhost:3000/api/saved-posts-dev",
-				{
-					method: "POST",
-					headers: {
-						"Content-Type": "application/json",
-					},
-					body: JSON.stringify(bodyData),
-				}
-			)
-			const rawData = await response.json()
-			const indexedData = await rawData.data.map((post, postIndex) => ({
-				...post,
-				initialIndex: postIndex,
-			}))
+export default function Home({ data }) {
+	// const getKey = () => {
+	// 	return `/api/saved-posts-dev/1`
+	// }
+	// const { data, error, size, setSize } = useSWRInfinite(getKey, fetchSavedPosts)
 
-			return indexedData
-		} catch (error) {
-			console.log(error)
-			return error
-		}
-	}
-
-	const getKey = () => {
-		return `/api/saved-posts-dev/1`
-	}
-	const { data, error, size, setSize } = useSWRInfinite(getKey, fetchSavedPosts)
-
-	const handleFetchMore = () => setSize(size + 1)
-	if (error)
-		return (
-			<p>
-				Wow, you have terrible taste. We can&lsquo;t work with this!
-				<p>
-					Just kidding--there was a problem. That&lsquo;s our bad. Your saved
-					posts are probably amazing.
-				</p>
-			</p>
-		)
+	// const handleFetchMore = () => setSize(size + 1)
+	// if (error)
+	// 	return (
+	// 		<p>
+	// 			Wow, you have terrible taste. We can&lsquo;t work with this!
+	// 			<p>
+	// 				Just kidding--there was a problem. That&lsquo;s our bad. Your saved
+	// 				posts are probably amazing.
+	// 			</p>
+	// 		</p>
+	// 	)
 
 	function shuffle(array) {
 		let currentIndex = array.length,
@@ -71,7 +45,7 @@ export default function Home() {
 	if (!data) return <p>Loading...</p>
 
 	if (data && typeof data !== undefined) {
-		console.log(data.flat(3))
+		// console.log(data.flat(3))
 		// console.log(data.forEach((set) => console.log(set.data)))
 		// data[0].data.map((item) => console.log(item.preview.enabled))
 		return (
@@ -88,10 +62,34 @@ export default function Home() {
 						<PostCard key={item.name} item={item} />
 					))}
 
-				<button className="fetch-more" onClick={handleFetchMore}>
-					Fetch More
-				</button>
+				<button className="fetch-more">Fetch More</button>
 			</div>
 		)
 	}
+}
+export async function getServerSideProps() {
+	const bodyData = { currentPostFullname: "t3_rtuh19" }
+	try {
+		const response = await fetch("http://localhost:3000/api/saved-posts-dev", {
+			method: "POST",
+			headers: {
+				"Content-Type": "application/json",
+			},
+			body: JSON.stringify(bodyData),
+		})
+		const rawData = await response.json()
+		const indexedData = await rawData.data.map((post, postIndex) => ({
+			...post,
+			initialIndex: postIndex,
+		}))
+
+		const data = indexedData
+
+		return { props: { data } }
+	} catch (error) {
+		console.log(error)
+		return error
+	}
+
+	// Pass data to the page via props
 }

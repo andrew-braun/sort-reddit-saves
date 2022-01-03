@@ -1,0 +1,8 @@
+.postCard {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	width: clamp(280px, 420px, 95vw);
+	margin: 1rem;
+	background: lightpink;
+}

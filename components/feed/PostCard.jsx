@@ -3,7 +3,8 @@ import styles from "./post-card.module.css"
 
 export default function PostCard({ item }) {
 	return (
-		<article key={item.name}>
+		<article className={styles.postCard} key={item.name}>
+			<p>{item.initialIndex}</p>
 			{item.preview !== undefined && (
 				<a href={`https://reddit.com${item.permalink}`}>
 					<Image
@@ -16,8 +17,12 @@ export default function PostCard({ item }) {
 				</a>
 			)}
 			<a href={`https://reddit.com${item.permalink}`}>{item.title}</a>
-			<span className={styles.subreddit}>{item.subreddit}</span>
-			<p>{item.initialIndex}</p>
+			<a
+				href={`https://reddit.com/r/${item.subreddit}`}
+				className={styles.subreddit}
+			>
+				r/{item.subreddit}
+			</a>
 		</article>
 	)
 }
