@@ -1,10 +1,8 @@
 import useSWR from "swr"
 import Head from "next/head"
-import Image from "next/image"
 import styles from "../styles/home.module.css"
 
 import PostFeed from "../components/feed/PostFeed"
-import PostCard from "../components/feed/PostCard"
 
 export default function Home() {
 	const fetchData = async () => {
@@ -67,29 +65,3 @@ export default function Home() {
 		)
 	}
 }
-// export async function getServerSideProps() {
-// 	const bodyData = { currentPostFullname: "t3_rtuh19" }
-// 	try {
-// 		const response = await fetch("http://localhost:3000/api/saved-posts-dev", {
-// 			method: "POST",
-// 			headers: {
-// 				"Content-Type": "application/json",
-// 			},
-// 			body: JSON.stringify(bodyData),
-// 		})
-// 		const rawData = await response.json()
-// 		const indexedData = await rawData.data.map((post, postIndex) => ({
-// 			...post,
-// 			initialIndex: postIndex,
-// 		}))
-
-// 		const data = indexedData.flat(3)
-
-// 		return { props: { data } }
-// 	} catch (error) {
-// 		console.log(error)
-// 		return error
-// 	}
-
-// 	// Pass data to the page via props
-// }
