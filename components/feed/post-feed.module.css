@@ -1,0 +1,11 @@
+.postFeedContainer {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+}
+
+.postFeed {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+}

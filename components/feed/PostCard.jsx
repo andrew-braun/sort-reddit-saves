@@ -6,15 +6,18 @@ export default function PostCard({ item }) {
 		<article className={styles.postCard} key={item.name}>
 			<p>{item.initialIndex}</p>
 			{item.preview !== undefined && (
-				<a href={`https://reddit.com${item.permalink}`}>
-					<Image
-						src={item?.preview?.images[0]?.resolutions[1]?.url}
-						alt={item.title}
-						// layout="fill"
-						width="108px"
-						height="192px"
-					/>
-				</a>
+				<div className={styles.postCardImageContainer}>
+					<a href={`https://reddit.com${item.permalink}`}>
+						<Image
+							// src={item?.preview?.images[0]?.resolutions[1]?.url}
+							src={item?.preview?.images[0].source.url}
+							alt={item.title}
+							// layout="fill"
+							layout="fill"
+							objectFit="scale-down"
+						/>
+					</a>
+				</div>
 			)}
 			<a href={`https://reddit.com${item.permalink}`}>{item.title}</a>
 			<a

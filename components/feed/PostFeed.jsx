@@ -4,20 +4,22 @@ import shuffle from "../../helpers/shuffle"
 import styles from "./post-feed.module.css"
 
 export default function PostFeed({ data }) {
-	const [shuffledData, setShuffledData] = useState(data)
+	const [shuffledData, setShuffledData] = useState(shuffle(data))
 
 	const handleShuffle = () => {
 		setShuffledData(shuffle([...shuffledData]))
 	}
 
 	return (
-		<Fragment>
+		<div className={styles.postFeedContainer}>
 			<button className="shuffle-more" onClick={handleShuffle}>
 				Shuffle!
 			</button>
-			{shuffledData.map((item) => (
-				<PostCard key={item.name} item={item} />
-			))}
-		</Fragment>
+			<section className={styles.postFeed}>
+				{shuffledData.map((item) => (
+					<PostCard key={item.name} item={item} />
+				))}
+			</section>
+		</div>
 	)
 }
