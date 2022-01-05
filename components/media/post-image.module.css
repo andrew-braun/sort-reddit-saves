@@ -1,0 +1,10 @@
+.cardImageContainerLink {
+	display: flex;
+	position: relative;
+	flex: 1 1 auto;
+}
+
+.image {
+	flex: 1 1 auto;
+	height: 100% !important;
+}

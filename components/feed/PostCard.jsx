@@ -1,4 +1,4 @@
-import Image from "next/image"
+import PostImage from "../media/PostImage"
 import styles from "./post-card.module.css"
 
 export default function PostCard({ item }) {
@@ -35,21 +35,7 @@ export default function PostCard({ item }) {
 					r/{item.subreddit}
 				</a>
 			</div>
-			{item.preview !== undefined && (
-				<a
-					className={styles.cardImageContainerLink}
-					href={`https://reddit.com${item.permalink}`}
-				>
-					<Image
-						// src={item?.preview?.images[0]?.resolutions[1]?.url}
-						src={imageProperties.source}
-						alt={item.title}
-						className={styles.image}
-						width={imageProperties.width}
-						height={imageProperties.height}
-					/>
-				</a>
-			)}
+			{item.preview !== undefined && <PostImage item={item} />}
 		</article>
 	)
 }
