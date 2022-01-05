@@ -39,6 +39,9 @@ export default function PostCard({ item }) {
 			{item.preview !== undefined && !item.is_gallery && (
 				<PostImage item={item} />
 			)}
+			{item.removed_by_category && item.url_overridden_by_dest && (
+				<PostImage item={item} />
+			)}
 			{item.is_gallery === true && <PostGallery item={item} />}
 			{item.name.slice(0, 2) === "t1" && (
 				<div className={styles.postComment}>

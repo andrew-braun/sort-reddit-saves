@@ -12,11 +12,15 @@ export default function PostImage({ item }) {
 			imageProperties.source = res.url
 			imageProperties.width = res.width
 			imageProperties.height = res.height
-		} else {
+		} else if (images.source) {
 			imageProperties.source = images.source.url
 			imageProperties.width = images.source.width
 			imageProperties.height = images.source.height
 		}
+	} else {
+		imageProperties.source = item.url_overridden_by_dest
+		imageProperties.width = "1000px"
+		imageProperties.height = "1000px"
 	}
 	return (
 		<a
