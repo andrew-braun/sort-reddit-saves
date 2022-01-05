@@ -1,5 +1,5 @@
 import Image from "next/image"
-import styles from "./post-image.module.css"
+import styles from "./postimage.module.css"
 
 export default function PostImage({ item }) {
 	const images = item.preview ? item.preview.images[0] : false

@@ -1,5 +1,6 @@
 import PostImage from "../media/PostImage"
-import styles from "./post-card.module.css"
+import PostGallery from "../media/PostGallery"
+import styles from "./postcard.module.css"
 
 export default function PostCard({ item }) {
 	const images = item.preview ? item.preview.images[0] : false
@@ -35,7 +36,15 @@ export default function PostCard({ item }) {
 					r/{item.subreddit}
 				</a>
 			</div>
-			{item.preview !== undefined && <PostImage item={item} />}
+			{item.preview !== undefined && !item.is_gallery && (
+				<PostImage item={item} />
+			)}
+			{item.is_gallery === true && <PostGallery item={item} />}
+			{item.name.slice(0, 2) === "t1" && (
+				<div className={styles.postComment}>
+					<p>{item.body_html.replace(/(<([^>]+)>)/gi, "")}</p>
+				</div>
+			)}
 		</article>
 	)
 }
