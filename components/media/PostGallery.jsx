@@ -2,7 +2,11 @@ import Image from "next/image"
 import styles from "./postgallery.module.css"
 
 export default function PostGallery({ item }) {
+	if (typeof item.media_metadata === "undefined") {
+		return <p>Failed to load gallery</p>
+	}
 	const images = Object.entries(item.media_metadata)
+
 	console.log(images)
 
 	const imageProperties = images.map((image) => {

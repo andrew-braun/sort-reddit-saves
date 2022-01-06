@@ -1,5 +1,7 @@
 import { Fragment, useState, useEffect } from "react"
+import { ErrorBoundary } from "react-error-boundary"
 import PostCard from "./PostCard"
+import ErrorFallback from "../error/ErrorFallback"
 import shuffle from "../../helpers/shuffle"
 import styles from "./postfeed.module.css"
 
@@ -11,6 +13,7 @@ export default function PostFeed({ data }) {
 	}
 
 	return (
+		// <ErrorBoundary FallbackComponent={ErrorFallback}>
 		<div className={styles.postFeedContainer}>
 			<button className="shuffle-more" onClick={handleShuffle}>
 				Shuffle!
@@ -21,5 +24,6 @@ export default function PostFeed({ data }) {
 				))}
 			</section>
 		</div>
+		// </ErrorBoundary>
 	)
 }

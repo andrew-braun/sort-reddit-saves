@@ -6,7 +6,7 @@ import PostFeed from "../components/feed/PostFeed"
 
 export default function Home() {
 	const fetchData = async () => {
-		const bodyData = { currentPostFullname: "t3_rtuh19" }
+		// const bodyData = { currentPostFullname: "t3_rtuh19" }
 		try {
 			const response = await fetch(
 				"http://localhost:3000/api/saved-posts-dev",
@@ -15,7 +15,7 @@ export default function Home() {
 					headers: {
 						"Content-Type": "application/json",
 					},
-					body: JSON.stringify(bodyData),
+					// body: JSON.stringify(bodyData),
 				}
 			)
 			const rawData = await response.json()
@@ -25,7 +25,7 @@ export default function Home() {
 			}))
 
 			const data = indexedData.flat(3)
-
+			console.log(data.length)
 			return data
 		} catch (error) {
 			console.log(error)

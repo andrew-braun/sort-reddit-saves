@@ -9,6 +9,7 @@ export default function PostImage({ item }) {
 	if (images) {
 		if (images.resolutions[3]) {
 			const res = images.resolutions[3]
+
 			imageProperties.source = res.url
 			imageProperties.width = res.width
 			imageProperties.height = res.height
@@ -22,18 +23,40 @@ export default function PostImage({ item }) {
 		imageProperties.width = "1000px"
 		imageProperties.height = "1000px"
 	}
+	const allowedImageDomains = process.env.images.domains
+	const imageDomainIsAllowed = allowedImageDomains.some((domain) =>
+		imageProperties.source.includes(domain)
+	)
+	console.log(imageDomainIsAllowed)
+
+	if (item.title == "How To Recognize The Artists Of Paintings") {
+		console.log(item)
+	}
 	return (
 		<a
 			className={styles.cardImageContainerLink}
 			href={`https://reddit.com${item.permalink}`}
 		>
-			<Image
-				src={imageProperties.source}
-				alt={item.title}
-				className={styles.image}
-				width={imageProperties.width}
-				height={imageProperties.height}
-			/>
+			{imageDomainIsAllowed && (
+				<Image
+					src={imageProperties.source}
+					alt={item.title}
+					className={styles.image}
+					width={imageProperties.width}
+					height={imageProperties.height}
+					id={imageProperties.height}
+				/>
+			)}
+			{!imageDomainIsAllowed && (
+				// eslint-disable-next-line @next/next/no-img-element
+				<img
+					src={imageProperties.source}
+					alt={item.title}
+					className={styles.image}
+					width={imageProperties.width}
+					height={imageProperties.height}
+				/>
+			)}
 		</a>
 	)
 }

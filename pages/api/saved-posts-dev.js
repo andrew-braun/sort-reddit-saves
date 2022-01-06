@@ -21,9 +21,11 @@ export default async function handler(req, res) {
 	try {
 		const r = new snoowrap(config)
 
+		// const savedContent = await r.getMe().getSavedContent().fetchAll()
+
 		const savedContent = await r.getMe().getSavedContent({
-			after: currentPostFullname,
-			limit: 25,
+			// after: currentPostFullname,
+			limit: 100,
 			skipReplies: true,
 		})
 		// const moreContent = await savedContent.fetchMore({ amount: 25 })
