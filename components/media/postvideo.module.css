@@ -1,0 +1,10 @@
+.videoContainer {
+	position: relative;
+	width: 100%;
+}
+
+.video {
+	position: relative;
+	width: 100%;
+	object-fit: container;
+}
