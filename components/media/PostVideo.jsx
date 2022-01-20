@@ -1,9 +1,7 @@
 import { Fragment, useRef, useEffect, useCallback } from "react"
-import Image from "next/image"
 import styles from "./postvideo.module.css"
 
 export default function PostVideo({ item }) {
-	const isSecureMedia = item.secure_media ? true : false
 	const video = item.media
 		? item.media.reddit_video
 		: item.secure_media.reddit_video
@@ -20,27 +18,15 @@ export default function PostVideo({ item }) {
 		imageProperties.height = "1000px"
 	}
 
-	const allowedImageDomains = process.env.images.domains
-	const imageDomainIsAllowed = allowedImageDomains.some((domain) =>
-		imageProperties.source.includes(domain)
-	)
-
 	const audio = imageProperties.source.includes("v.redd.it")
 		? `https://v.redd.it/${
 				imageProperties.source.match("[.it]/(.*?/)")[1]
 		  }DASH_audio.mp4`
 		: false
-	console.log(audio)
 
 	const videoRef = useRef()
 	const audioRef = useRef()
 
-	const handleVideoPlay = (event) => {
-		if (audioRef.current) {
-			audioRef.current.play()
-			audioRef.current.currentTime = videoRef.current.currentTime
-		}
-	}
 	const handleVideoPause = (event) => {
 		if (audioRef.current) {
 			audioRef.current.pause()
@@ -59,16 +45,18 @@ export default function PostVideo({ item }) {
 		}
 	}
 
-	console.log(videoRef)
-
 	useEffect(() => {
 		if (videoRef.current) {
-			// videoRef.current.addEventListener("play", handleVideoPlay)
 			videoRef.current.addEventListener("pause", handleVideoPause)
 			videoRef.current.addEventListener("playing", handleVideoPlaying)
 			videoRef.current.muted = false
 		}
 	}, [videoRef])
+
+	const allowedImageDomains = process.env.images.domains
+	const imageDomainIsAllowed = allowedImageDomains.some((domain) =>
+		imageProperties.source.includes(domain)
+	)
 
 	return (
 		<div className={styles.videoContainer}>
