@@ -1,4 +1,4 @@
-import { Fragment, useRef, useEffect } from "react"
+import { Fragment, useRef, useEffect, useCallback } from "react"
 import Image from "next/image"
 import styles from "./postvideo.module.css"
 
@@ -38,11 +38,24 @@ export default function PostVideo({ item }) {
 	const handleVideoPlay = (event) => {
 		if (audioRef.current) {
 			audioRef.current.play()
+			audioRef.current.currentTime = videoRef.current.currentTime
 		}
 	}
 	const handleVideoPause = (event) => {
 		if (audioRef.current) {
 			audioRef.current.pause()
+			audioRef.current.currentTime = videoRef.current.currentTime
+		}
+	}
+	const handleVideoPlaying = (event) => {
+		console.log("playing")
+		if (audioRef.current) {
+			try {
+				audioRef.current.play()
+				audioRef.current.currentTime = videoRef.current.currentTime
+			} catch (error) {
+				console.log(error)
+			}
 		}
 	}
 
@@ -50,8 +63,10 @@ export default function PostVideo({ item }) {
 
 	useEffect(() => {
 		if (videoRef.current) {
-			videoRef.current.addEventListener("play", handleVideoPlay)
+			// videoRef.current.addEventListener("play", handleVideoPlay)
 			videoRef.current.addEventListener("pause", handleVideoPause)
+			videoRef.current.addEventListener("playing", handleVideoPlaying)
+			videoRef.current.muted = false
 		}
 	}, [videoRef])
 
@@ -70,6 +85,7 @@ export default function PostVideo({ item }) {
 					</video>
 					{audio && (
 						<audio
+							className={styles.videoAudio}
 							controls
 							src={audio}
 							id={`${item.id}-audio>`}
